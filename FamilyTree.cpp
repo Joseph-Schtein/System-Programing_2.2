@@ -149,34 +149,41 @@ using namespace family;
 		
 	}
 
-	string Tree::find(Node *current ,string related, int depth){
+	string Tree::find(Node *current , int depth, bool gender){
 		string output = "";		
 		if(current != NULL){
-			if(depth > 1){			
-				output = find(current->father, related, depth-1);
-				if(output == "")
-					output = find(current->mother, related, depth-1);
+			if(depth == 0){
+				return current->name;
 			}
-			
-			else{
-				int length = related.length();
-				string gender = related.substr(length-6, length);
-				if(gender == "father"){
-					if(current->father != NULL)
-						return current->father->name;
+
+			else if (depth == 1){
+				if(gender == true)
+					return find(current->father, depth-1, gender);
 				
-					else if(current->mother != NULL)
-						return current->mother->name;
-					
-				}	
-			}	
+
+				else
+					return find(current->mother, depth-1, gender);
+		
+			}
+
+			else{
+				output = find(current->father, depth-1, gender);
+				if(output == "")				
+					output = find(current->mother, depth-1, gender);
+			}
 		}
-		throw invalid_argument("We did not find someone withe this "+related + " relation to you");
+		
+		return output;
+
 	
 	}
 
 	string Tree::find(string related){
-		if(related == "you"){
+		
+		string output = "";
+		bool male; 
+
+		if(related == "me"){
 			return root->name;
 		}
 
@@ -189,18 +196,35 @@ using namespace family;
 
 		else{
 			int length = related.length();
-			int depth = 2;
-			string tmp = "";
-			for(int i = 0; i < length; i++){
+			string tmp = "";			
+			for(int i = length-6; i < length; i++){			
 				tmp = tmp + related[i];
-				if(tmp == "great-"){
-					tmp = "";
-					depth++;
-				}
 			}
+	
+			if(tmp == "father")
+				male = true;
+	
+			else
+				male = false;
 
-			return find(root, related, depth);			
+			length = length-11;
+			length = length/6;			
+			int depth = 2+length;
+			//cout << depth << endl;
+			if (related.find("father") != std::string::npos || related.find("mother") != std::string::npos){	
+				output = find(root->father, depth-1, male);
+				if(output == "")
+					output = find(root->mother, depth-1, male);	
+			}
+		
 		}
+
+		if(output == ""){
+			throw invalid_argument("The tree cannot handle the '"+related + "' relation");
+		}
+
+		else
+			return output;
 	}
 
 
@@ -281,30 +305,5 @@ using namespace family;
 	void Tree::display(){
 		display(root);
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

@@ -32,7 +32,7 @@ class family::Tree{
 		void addFather(Node* current, string son, string father);
 		void addMother(Node *current ,string son, string mother);
 		string relation(Node *current ,string namesSearch, int depth);
-		string find(Node *current ,string related, int depth);
+		string find(Node *current , int depth, bool gender);
 		void remove(Node *current);
 		void display(Node *current);
 		Node* search(Node *current, string son);
