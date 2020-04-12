@@ -35,8 +35,9 @@ class family::Tree{
 		string find(Node *current , int depth, bool gender);
 		void remove(Node *current);
 		void display(Node *current);
-		Node* search(Node *current, string son);
-		int depth(Node *current, int height);
+		Node* search(Node *current, string parent);
+		Node* searchChiled(Node *current, string parent);
+		void destroyTree(Node *current);
 
 	public:
 		Node* root;
@@ -50,7 +51,7 @@ class family::Tree{
 		}
 
 		~Tree(){
-			remove(root->name);
+			destroyTree(root);
 		}
 
 		void addFather(string son, string father);
