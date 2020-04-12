@@ -55,20 +55,20 @@ using namespace family;
 	}
 		
 
-	void Tree::addFather(Node* current, string son, string father){
+	Tree& Tree::addFather(Node* current, string son, string father){
 		Node *tmp = search(current, son);
 		tmp->father = new Node;
 		tmp->father->name = father;
 		tmp->father->male = true;
 		tmp->father->father = NULL;
 		tmp->father->mother = NULL;
-		
+		return *this;
 	}
 
 
-	void Tree::addFather(string son, string father){ 
+	Tree& Tree::addFather(string son, string father){ 
 		if(root->name != son){
-			addFather(root, son, father);		
+			return addFather(root, son, father);		
 		}
 
 		else{
@@ -77,26 +77,27 @@ using namespace family;
 			root->father->male = true;
 			root->father->father = NULL;
 			root->father->mother = NULL;
-			
+			return *this;
 
 		}
 	}
 
 
-	void Tree::addMother(Node* current, string son, string mother){
+	Tree& Tree::addMother(Node* current, string son, string mother){
 		Node *tmp = search(current, son);
 		tmp->mother = new Node;
 		tmp->mother->name = mother;
 		tmp->mother->male = false;
 		tmp->mother->father = NULL;
 		tmp->mother->mother = NULL;
+		return *this;
 		
 	}
 
 
-	void Tree::addMother(string son, string mother){ 
+	Tree& Tree::addMother(string son, string mother){ 
 		if(root->name != son){
-			addMother(root, son, mother);		
+			return addMother(root, son, mother);		
 		}
 
 		else{
@@ -105,7 +106,7 @@ using namespace family;
 			root->mother->male = false;
 			root->mother->father = NULL;
 			root->mother->mother = NULL;
-			
+			return *this;
 		}
 	}
 

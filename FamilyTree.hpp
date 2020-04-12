@@ -13,8 +13,6 @@ namespace family{
 
 
 
-
-
 struct family::Node{
 	string name;
 	Node* father;
@@ -23,14 +21,15 @@ struct family::Node{
 };
 
 
+
 class family::Tree{
 		
 	private:
 			
 		
 	
-		void addFather(Node* current, string son, string father);
-		void addMother(Node *current ,string son, string mother);
+		Tree& addFather(Node* current, string son, string father);
+		Tree& addMother(Node *current ,string son, string mother);
 		string relation(Node *current ,string namesSearch, int depth);
 		string find(Node *current , int depth, bool gender);
 		void remove(Node *current);
@@ -40,6 +39,10 @@ class family::Tree{
 		void destroyTree(Node *current);
 
 	public:
+
+		
+
+
 		Node* root;
 		
 		Tree(string me){
@@ -54,8 +57,8 @@ class family::Tree{
 			destroyTree(root);
 		}
 
-		void addFather(string son, string father);
-		void addMother(string son, string mother);
+		Tree& addFather(string son, string father);
+		Tree& addMother(string son, string mother);
 		string relation(string namesSearch);
 		string find(string related);
 		void remove(string name);		
