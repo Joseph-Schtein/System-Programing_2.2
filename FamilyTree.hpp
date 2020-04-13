@@ -37,6 +37,7 @@ class family::Tree{
 		Node* search(Node *current, string parent);
 		Node* searchChiled(Node *current, string parent);
 		void destroyTree(Node *current);
+		
 
 	public:
 
@@ -66,4 +67,3 @@ class family::Tree{
 
 
 };
-

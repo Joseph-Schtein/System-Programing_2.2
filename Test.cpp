@@ -5,113 +5,154 @@ using namespace family;
 #include <string>
 using namespace std;
 
+//10
 
-TEST_CASE("Test add perants and finding them and give their relation") {
-	family::Tree T("Joseph senior");	
-	T.addFather("Joseph senior", "Avrham");
-	T.addMother("Joseph senior", "Yafa");
-	T.addFather("Avrham", "Joseph");
-	T.addMother("Avrham", "Gizela");
-	T.addFather("Yafa", "David");
-	T.addMother("Yafa", "Hasmit");
-	T.addFather("Joseph", "Zevi");
-	T.addMother("Joseph", "Sara");
-	CHECK(relation("Zevi") == string("great-grandfather"));
-	CHECK(relation("David") == string("grandfather"));
-	CHECK(relation("Joseph") == string("grandfather"));
-	CHECK(relation("Yafa") == string("mother"));
-	CHECK(relation("Gizela") == string("grandmother"));
-	CHECK(relation("Sara") == string("great-grandmother"));
-	CHECK(relation("Joseph senior") == string("me"));
-	CHECK(relation("Avrham") == string("father"));
-	CHECK(relation("Hasmit") == string("grandmother"));
-	CHECK(relation("Shoki") == string("unrelated"));
+TEST_CASE("test add and relation") {
+	Tree T("Joseph junior");	
+	T.addFather("Joseph junior", "Avrham")
+	.addFather("Avrham", "Joseph")
+	.addMother("Avrham", "Gizela")
+	.addFather("Joseph", "Zevi")
+	.addMother("Joseph", "Sara");
+	T.addMother("Joseph junior", "Yafa")
+	.addFather("Yafa", "David")
+	.addMother("Yafa", "Hasmit");
+	CHECK(T.relation("Zevi") == "great-grandfather");
+	CHECK(T.relation("David") == "grandfather");
+	CHECK(T.relation("Joseph") == "grandfather");
+	CHECK(T.relation("Yafa") == "mother");
+	CHECK(T.relation("Gizela") == "grandmother");
+	CHECK(T.relation("Sara") == "great-grandmother");
+	CHECK(T.relation("Joseph junior") == "me");
+	CHECK(T.relation("Avrham") == "father");
+	CHECK(T.relation("Hasmit") == "grandmother");
+	CHECK(T.relation("Shoki") == "unrelated");
 }
 
-
+//10
 
 TEST_CASE("Test add perants and finding them ant try to find them again after removing them") {
-	family::Tree T("Joseph senior");	
-	T.addFather("Joseph senior", "Avrham");
-	T.addMother("Joseph senior", "Yafa");
-	T.addFather("Avrham", "Joseph");
-	T.addMother("Avrham", "Gizela");
-	T.addFather("Yafa", "David");
-	T.addMother("Yafa", "Hasmit");
-	T.addFather("Joseph", "Zevi");
-	T.addMother("Joseph", "Sara");
-	CHECK(relation("Zevi") == string("great-grandfather"));
+	Tree T("Joseph junior");	
+	T.addFather("Joseph junior", "Avrham")
+	.addFather("Avrham", "Joseph")
+	.addMother("Avrham", "Gizela")
+	.addFather("Joseph", "Zevi")
+	.addMother("Joseph", "Sara");
+	T.addMother("Joseph junior", "Yafa")
+	.addFather("Yafa", "David")
+	.addMother("Yafa", "Hasmit");
+	CHECK(T.relation("Zevi") == "great-grandfather");
 	T.remove("Zevi");	
-	CHECK(T.relation("Zevi") == string("unrelated"));
-	CHECK(T.relation("Joseph") == string("grandfather"));
+	CHECK(T.relation("Zevi") == "unrelated");
+	CHECK(T.relation("Joseph") == "grandfather");
 	T.remove("Joseph");
-	CHECK(T.relation("Yafa") == string("mother"));
+	CHECK(T.relation("Yafa") == "mother");
 	T.remove("Yafa");
-	CHECK(T.relation("Yafa") == string("unrelated"));
-	CHECK(T.relation("Gizela") == string("grandmother"));
-	CHECK(T.relation("Sara") == string("unrelated"));
-	CHECK(T.relation("Joseph senior") == string("me"));
+	CHECK(T.relation("Yafa") == "unrelated");
+	CHECK(T.relation("Gizela") == "grandmother");
+	CHECK(T.relation("Sara") == "unrelated");
+	CHECK(T.relation("Joseph junior") == "me");
 	T.remove("Avrham");
-	CHECK(T.relation("Avrham") == string("unrelated"));
-	CHECK(relation("Hasmit") == string("unrelated"));
+	CHECK(T.relation("Avrham") == "unrelated");
+	CHECK(T.relation("Hasmit") == "unrelated");
 }
 
-
+//11
 
 TEST_CASE("Test add perants and finding random relation") {
-	family::Tree T("Joseph senior");	
-	T.addFather("Joseph senior", "Avrham");
-	T.addMother("Joseph senior", "Yafa");
-	T.addFather("Avrham", "Joseph");
-	T.addMother("Avrham", "Gizela");
-	T.addFather("Yafa", "David");
-	T.addMother("Yafa", "Hasmit");
-	T.addFather("Joseph", "Zevi");
-	T.addMother("Joseph", "Sara");
-	T.addFather("Zevi", "Shoki");
-	CHECK(relation("great-grandfather") == string("Zevi"));
-	CHECK(relation("mother") == string("Yafa"));
-	CHECK(relation("grandmother") == string("Gizela"));
-	CHECK(relation("grandfather") == string("Joseph"));
-	CHECK(relation("great-great-grandfather") == string("Shoki"));
-	CHECK(relation("great-grandmother") == string("Sara"));
+	Tree T("Joseph junior");	
+	T.addFather("Joseph junior", "Avrham")
+	.addMother("Joseph junior", "Yafa")
+	.addFather("Avrham", "Joseph")
+	.addMother("Avrham", "Gizela")
+	.addFather("Yafa", "David")
+	.addMother("Yafa", "Hasmit")
+	.addFather("Joseph", "Zevi")
+	.addMother("Joseph", "Sara")
+	.addFather("Zevi", "Shoki");
+	CHECK(T.find("great-grandfather") == string("Zevi"));
+	CHECK(T.find("mother") == string("Yafa"));
+	CHECK(T.find("grandmother") == string("Gizela"));
+	CHECK(T.find("grandfather") == string("Joseph"));
+	CHECK(T.find("great-great-grandfather") == string("Shoki"));
+	CHECK(T.find("great-grandmother") == string("Sara"));
 	T.remove("Joseph");	
-	CHECK(relation("grandfather") == string("David"));
-	CHECK(relation("me") == string("Joseph senior"));
-	CHECK(relation("father") == string("Avrham"));
+	CHECK(T.find("grandfather") == string("David"));
+	CHECK(T.find("me") == string("Joseph junior"));
+	CHECK(T.find("father") == string("Avrham"));
 	T.remove("Gizela");
-	CHECK(relation("grandmother") == string("Hasmit"));
-	CHECK(relation("great-grandfather") == string("Zevi"));
+	CHECK(T.find("grandmother") == string("Hasmit"));
+	CHECK_THROWS(T.find("great-grandfather"));
 }
-
+//11
 
 TEST_CASE("Test add perants and finding random relation then change there names and check again if the relation is still the same") {
-	family::Tree T("Joseph senior");	
-	T.addFather("Joseph senior", "Avrham");
-	T.addMother("Joseph senior", "Yafa");
-	T.addFather("Avrham", "Joseph");
-	T.addMother("Avrham", "Gizela");
-	T.addFather("Yafa", "David");
-	T.addMother("Yafa", "Hasmit");
-	T.addFather("Joseph", "Zevi");
-	T.addMother("Joseph", "Sara");
-	T.addFather("Zevi", "Shoki");
-	CHECK(relation("great-grandfather") == string("Zevi"));
-	CHECK(relation("mother") == string("Yafa"));
-	CHECK(relation("grandmother") == string("Gizela"));
+	Tree T("Joseph senior");	
+	T.addFather("Joseph senior", "Avrham")
+	.addMother("Joseph senior", "Yafa")
+	.addFather("Avrham", "Joseph")
+	.addMother("Avrham", "Gizela")
+	.addFather("Yafa", "David")
+	.addMother("Yafa", "Hasmit")
+	.addFather("Joseph", "Zevi")
+	.addMother("Joseph", "Sara")
+	.addFather("Zevi", "Shoki");
+	CHECK(T.find("great-grandfather") == "Zevi");
+	CHECK(T.find("mother") == "Yafa");
+	CHECK(T.find("grandmother") == "Gizela");
 	T.remove("Gizela");
-	T.addMother("Avrham", "");
-	CHECK(relation("grandfather") == string("Joseph"));
-	CHECK(relation("great-great-grandfather") == string("Shoki"));
-	CHECK(relation("great-grandmother") == string("Sara"));
+	T.addMother("Avrham", "Leha");
+	CHECK(T.find("grandfather") == "Joseph");
+	CHECK(T.find("great-great-grandfather") == "Shoki");
+	CHECK(T.find("great-grandmother") == "Sara");
 	T.remove("Joseph");	
-	CHECK(relation("grandfather") == string("David"));
-	CHECK(relation("me") == string("Joseph senior"));
-	CHECK(relation("father") == string("Avrham"));
-	T.remove("Gizela");
-	CHECK(relation("grandmother") == string("Hasmit"));
-	CHECK(relation("great-grandfather") == string("Zevi"));
+	CHECK(T.find("grandfather") == "David");
+	CHECK(T.find("me") == "Joseph senior");
+	CHECK(T.find("father") == "Avrham");
+	T.remove("Leha");
+	CHECK(T.find("grandmother") == "Hasmit");
+	CHECK_THROWS(T.find("great-grandfather"));
 }
+
+//9
+
+TEST_CASE("Test add perants and finding random relation then change there names and check again if the relation is still the same") {
+	family::Tree T ("Yosef"); 
+	T.addFather("Yosef", "Yaakov")  
+	.addMother("Yosef", "Rachel")  
+	.addFather("Yaakov", "Isaac")
+	.addMother("Yaakov", "Rivka")
+	.addFather("Rachel", "Lavan")
+	.addMother("Rachel", "Adina")
+	.addFather("Isaac", "Avraham")
+	.addMother("Isaac", "Sara")
+	.addFather("Rivka","Betuel")
+	.addFather("Sara","Heran")	
+	.addFather("Avraham", "Terah");
+	CHECK(T.find("grandmother") == "Rivka");
+	CHECK(T.find("great-grandmother") == "Sara");
+	CHECK(T.find("great-great-grandfather") == "Terah");
+	CHECK(T.find("great-grandfather") == "Avraham");
+	T.remove("Avraham");
+	CHECK(T.find("great-grandfather") == "Betuel");
+	T.remove("Yaakov");
+	CHECK(T.find("grandfather") == "Lavan");
+	CHECK(T.relation("Lavan") == "grandfather");
+	CHECK(T.relation("Yaakov") == "unrelated");
+	T.addFather("Yosef","Yaakov");
+	CHECK(T.relation("Yaakov") == "father");
+	
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

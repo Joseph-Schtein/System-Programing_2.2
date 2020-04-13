@@ -7,7 +7,7 @@ using namespace family;
 
 
 	void Tree::destroyTree(Node* current){
-		if(current != NULL){
+		if(current){
 			destroyTree(current->father);
 			destroyTree(current->mother);
 			delete current;	
@@ -19,15 +19,15 @@ using namespace family;
 
 	Node* Tree::search(Node *current, string parent){
 		Node* output = NULL;		
-		if(current != NULL){	
+		if(current){	
 			if(current->name == parent)			
 				return current;
 		
-			else if(current->father != NULL)
+			else if(current->father)
 				output= search(current->father,parent);
 			
 
-			else if(output == NULL && current->mother != NULL){			
+			if(!output && current->mother){			
 				output = search(current->mother,parent);
 			}
 				
@@ -38,15 +38,15 @@ using namespace family;
 
 	Node* Tree::searchChiled(Node *current, string parent){		
 		Node* output = NULL;		
-		if(current != NULL){	
-			if(current->father->name == parent || current->mother->name == parent)			
+		if(current){	
+	    if((current->father && current->father->name==parent)||(current->mother && current->mother->name== parent))			
 				return current;
 		
-			else if(current->father != NULL){
+			else if(current->father){
 				output = searchChiled(current->father,parent);
 			}
 
-			else if(output == NULL && current->mother != NULL){			
+			if( !output && current->mother){			
 				output = searchChiled(current->mother,parent);
 			}	
 			return output;
@@ -57,11 +57,14 @@ using namespace family;
 
 	Tree& Tree::addFather(Node* current, string son, string father){
 		Node *tmp = search(current, son);
-		tmp->father = new Node;
-		tmp->father->name = father;
-		tmp->father->male = true;
-		tmp->father->father = NULL;
-		tmp->father->mother = NULL;
+		if(tmp){
+			tmp->father = new Node;
+			tmp->father->name = father;
+			tmp->father->male = true;
+			tmp->father->father = NULL;
+			tmp->father->mother = NULL;
+		}	
+	
 		return *this;
 	}
 
@@ -85,13 +88,14 @@ using namespace family;
 
 	Tree& Tree::addMother(Node* current, string son, string mother){
 		Node *tmp = search(current, son);
-		tmp->mother = new Node;
-		tmp->mother->name = mother;
-		tmp->mother->male = false;
-		tmp->mother->father = NULL;
-		tmp->mother->mother = NULL;
+		if(tmp){		
+			tmp->mother = new Node;
+			tmp->mother->name = mother;
+			tmp->mother->male = false;
+			tmp->mother->father = NULL;
+			tmp->mother->mother = NULL;
+		}
 		return *this;
-		
 	}
 
 
@@ -113,7 +117,7 @@ using namespace family;
 	string Tree::relation(Node *current, string nameSearch, int depth){
 		
 		string output = "";
-		if(current != NULL  && current->name == nameSearch){
+		if(current  && current->name == nameSearch){
 			if(depth == 1){
 				if(current->male == true)
 					return "father";
@@ -153,7 +157,7 @@ using namespace family;
 
 		}
 
-		else if(current != NULL ){
+		else if(current){
 			output = relation(current->father, nameSearch, depth+1);			
 			if(output == "unrelated"){
 				output = relation(current->mother, nameSearch, depth+1);
@@ -171,7 +175,7 @@ using namespace family;
 
 	string Tree::relation(string nameSearch){
 		string output = "";
-		if(root->name == nameSearch){
+		if( root && root->name == nameSearch){
 			return "me";
 		}
 
@@ -187,7 +191,7 @@ using namespace family;
 
 	string Tree::find(Node *current , int depth, bool gender){
 		string output = "";		
-		if(current != NULL){
+		if(current){
 			if(depth == 0){
 				return current->name;
 			}
@@ -265,21 +269,37 @@ using namespace family;
 
 
 	void Tree::remove(Node *current){		
-		if(current != NULL){
+		if(current){
 			remove(current->father);
 			remove(current->mother);
 			current->father = NULL;
-			current->mother = NULL;			
-			
+			current->mother = NULL;				
 		}
+		
 	}
 
 
 
 	void Tree::remove(string name){					
-		Node *current  = searchChiled(root,name);
-		if(current != NULL){
-			remove(current);
+		
+		if(root && root->name == name){
+			remove(root);
+			root->name.erase();
+		}
+
+		else{
+			Node *chiled   = searchChiled(root, name);
+			Node *current  = search(root, name);
+			
+			if(current && current->male == true){
+				remove(current);
+				chiled->father=NULL;
+			}
+
+			else if(current && current->male == false){
+				remove(current);
+				chiled->mother=NULL;
+			}
 		}	
 	}
 
@@ -287,28 +307,31 @@ using namespace family;
 
 
 	void Tree::display(Node *current){
-		if(current != NULL && current->father != NULL && current->mother != NULL){
+		
+		if(!current)
+			return;
+
+		if(current && current->father && current->mother){
 			cout << "( "<< current->name << ", " << current->father->name << ", " << current->mother->name << " )" << endl;
 		}
 
-		else if(current != NULL && current->father != NULL && current->mother == NULL){
+		else if(current && current->father && !current->mother){
 			cout << "( "<< current->name << ", " << current->father->name << ", " << "unknown" << " )" << endl;
 		} 
 
-		else if(current != NULL && current->father == NULL && current->mother != NULL){
+		else if(current && !current->father && current->mother){
 			cout << "( "<< current->name << ", " << "unknown" << ", " << current->mother->name  << " )" << endl;
 		}
 
-		else if(current != NULL && current->father == NULL && current->mother == NULL){
+		else if(current && !current->father && !current->mother){
 			cout << "( "<< current->name << ", " << "unknown" << ", " << "unknown"  << " )" << endl;
 		}
 
-		if(current != NULL){
+		if(current){
 			display(current->father);
 			display(current->mother);
 		}
-
-		return; 
+ 
 	}
 
 
