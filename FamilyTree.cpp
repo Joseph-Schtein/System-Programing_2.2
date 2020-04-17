@@ -57,15 +57,16 @@ using namespace family;
 
 	Tree& Tree::addFather(Node* current, string son, string father){
 		Node *tmp = search(current, son);
-		if(tmp){
+		if(tmp && !tmp->father){
 			tmp->father = new Node;
 			tmp->father->name = father;
 			tmp->father->male = true;
 			tmp->father->father = NULL;
 			tmp->father->mother = NULL;
+			return *this;
 		}	
-	
-		return *this;
+		throw invalid_argument("He have a father already");
+
 	}
 
 
@@ -88,14 +89,15 @@ using namespace family;
 
 	Tree& Tree::addMother(Node* current, string son, string mother){
 		Node *tmp = search(current, son);
-		if(tmp){		
+		if(tmp && !tmp->mother){		
 			tmp->mother = new Node;
 			tmp->mother->name = mother;
 			tmp->mother->male = false;
 			tmp->mother->father = NULL;
 			tmp->mother->mother = NULL;
+			return *this;
 		}
-		return *this;
+		throw invalid_argument("He have a father already");
 	}
 
 
@@ -267,38 +269,17 @@ using namespace family;
 	}
 
 
-
-	void Tree::remove(Node *current){		
-		if(current){
-			remove(current->father);
-			remove(current->mother);
-			current->father = NULL;
-			current->mother = NULL;				
-		}
-		
-	}
-
-
-
 	void Tree::remove(string name){					
 		
 		if(root && root->name == name){
-			remove(root);
-			root->name.erase();
-		}
-
-		else{
-			Node *chiled   = searchChiled(root, name);
-			Node *current  = search(root, name);
+			destroyTree(root);
 			
-			if(current && current->male == true){
-				remove(current);
-				chiled->father=NULL;
-			}
-
-			else if(current && current->male == false){
-				remove(current);
-				chiled->mother=NULL;
+		}
+		else{
+			Node *current  = search(root, name);
+			if(current){
+				destroyTree(current);
+				
 			}
 		}	
 	}

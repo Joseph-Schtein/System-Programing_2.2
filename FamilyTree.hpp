@@ -32,7 +32,6 @@ class family::Tree{
 		Tree& addMother(Node *current ,string son, string mother);
 		string relation(Node *current ,string namesSearch, int depth);
 		string find(Node *current , int depth, bool gender);
-		void remove(Node* current);
 		void display(Node *current);
 		Node* search(Node *current, string parent);
 		Node* searchChiled(Node *current, string parent);
