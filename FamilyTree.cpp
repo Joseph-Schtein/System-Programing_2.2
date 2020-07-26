@@ -12,6 +12,7 @@ using namespace family;
 			destroyTree(current->mother);
 			current->father = NULL;
 			current->mother = NULL;
+			current->name = "unkown";
 			current = NULL;
 			
 		}
@@ -291,7 +292,7 @@ using namespace family;
 
 	void Tree::display(Node *current){
 		
-		if(!current)
+		if(!current || current->name == "unkown")
 			return;
 
 		if(current && current->father && current->mother){
