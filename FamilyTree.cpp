@@ -10,7 +10,9 @@ using namespace family;
 		if(current){
 			destroyTree(current->father);
 			destroyTree(current->mother);
-			delete current;	
+			current->father = NULL;
+			current->mother = NULL;
+			current = NULL;
 			
 		}
 	}
